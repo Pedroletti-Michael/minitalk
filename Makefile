@@ -1,8 +1,7 @@
 SRCS_SERV= server.c
 SRCS_USER= user.c
 
-INCS_SERV= server.h
-INCS_USER= user.h
+INCS= minitalk.h
 
 OBJS_SERV= ${SRCS_SERV:.c=.o}
 OBJS_USER= ${SRCS_USER:.c=.o}
@@ -13,17 +12,19 @@ NAME_SERV= server
 NAME_USER= user
 
 
-all: $(NAME)
+all: $(NAME_SERV) $(NAME_USER)
 
 .c.o:
 	@echo Compiling $<
-	gcc $(CFLAGS) $< -o ${<:.c=.o}
+	gcc $(CFLAGS) -c $< -o ${<:.c=.o}
 
-$(NAME): $(OBJS)
-	gcc $(CFLAGS) $(OBJS_SERV) $(NAME_SERV)
-	gcc $(CFLAGS) $(OBJS_USER) $(NAME_USER)
+$(NAME_SERV): $(OBJS_SERV)
+	gcc $(CFLAGS) libftprintf.a $(OBJS_SERV) -o $(NAME_SERV)
 
-re: fclean $(NAME)
+$(NAME_USER): $(OBJS_USER)
+	gcc $(CFLAGS) libftprintf.a $(OBJS_USER) -o $(NAME_USER)
+
+re: fclean all
 
 clean:
 	rm -f $(OBJS_SERV)

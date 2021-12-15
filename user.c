@@ -1,6 +1,4 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
+#include "minitalk.h"
 
 int	ft_atoi(const char *str)
 {
@@ -28,9 +26,29 @@ int	ft_atoi(const char *str)
 	return (sign * (int)res);
 }
 
-void	send_char(char a)
+int	ft_strlen(char *s)
 {
-	// function who's going to send
+	int i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return(i);
+}
+
+void	send_char(char a, int pid)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 8)
+	{
+		if (a & (128 >> i))
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		usleep(300);
+	}
 }
 
 int	main(int argc, char **argv)
@@ -41,15 +59,14 @@ int	main(int argc, char **argv)
 	{
 		pid = ft_atoi(argv[1]);
 		int i = 0;
-		while(i < strlen(argv[2]))
+		while(i < ft_strlen(argv[2]))
 		{
-			send_char(argv[2][i]);
-			usleep(50);
+			send_char(argv[2][i], pid);
 			i++;
 		}
 	}
 	else
 	{
-		printf("Too many argument or argument missing !");
+		ft_printf("Too many argument or argument missing !");
 	}
 }
