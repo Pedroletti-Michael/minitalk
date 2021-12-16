@@ -47,7 +47,7 @@ void	send_char(char a, int pid)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(300);
+		usleep(100);
 	}
 }
 
